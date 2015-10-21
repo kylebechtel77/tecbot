@@ -72,7 +72,7 @@ module.exports = function(robot) {
       if (prs.length > 0) {
         for (var i = 0; i < prs.length; i++) {
           var pull = prs[i];
-          var time = parseDateTime(pull.updatedAt);
+          var time = parseDateTime(pull.updated_at);
           html += '<li><strong>' + pull.user.login + '</strong> has open pull request ' 
             + '<strong>' + pull.title + '</strong> in ' + pull.base.repo.name + '</br>'
             + '<a href=\"' + pull.html_url + '\">' + pull.html_url + '</a></br>'
