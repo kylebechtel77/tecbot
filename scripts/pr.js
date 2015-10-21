@@ -16,7 +16,7 @@ module.exports = function(robot) {
   waitForHour(cooldown);
 
   robot.hear(/\/prs now/i, function(res) {
-    annoyEveryone();
+    annoyEveryoneWithResponse(res);
   });
 
   function setPRsOn(cooldown) {
@@ -40,12 +40,26 @@ module.exports = function(robot) {
       buildHTML(function(error, html) {
         if (error) {
           console.log("There was a problem..." + "\n" + error);
-        } else if (html.length > 0) {
+        } else if (html) {
           for (var i = 0; i < roomNames.length; i++) {
             messageHipchatRoom(roomNames[i], html);
           }
         } 
       });
+    }
+  }
+
+  function annoyEveryoneWithResponse(res) {
+    buildHTML(function(err, html) {
+      if (err) {
+        res.send("There was a problem..." + "\n" + err);
+      } else if (html) {
+        for (var i = 0; i < roomNames.length; i++) {
+          messageHipchatRoom(roomNames[i], html);
+        }
+      } else {
+        res.send("There are no pull requests! (frogparty)");
+      }
     }
   }
 
@@ -63,9 +77,9 @@ module.exports = function(robot) {
             + '<a href=\"' + pull.html_url + '\">' + pull.html_url + '</a></li>'; 
         }
         html += '</ul>'
-        cb(error, html);
+        cb(null, html);
       }
-      cb(null, '');
+      cb(null, undefined);
     });
   }    
 
