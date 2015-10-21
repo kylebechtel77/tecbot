@@ -60,7 +60,7 @@ module.exports = function(robot) {
       } else {
         res.send("There are no pull requests! (frogparty)");
       }
-    }
+    });
   }
 
   function buildHTML(cb) {
