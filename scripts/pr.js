@@ -72,9 +72,11 @@ module.exports = function(robot) {
       if (prs.length > 0) {
         for (var i = 0; i < prs.length; i++) {
           var pull = prs[i];
+          var time = parseDateTime(pull.updatedAt);
           html += '<li><strong>' + pull.user.login + '</strong> has open pull request ' 
             + '<strong>' + pull.title + '</strong> in ' + pull.base.repo.name + '</br>'
-            + '<a href=\"' + pull.html_url + '\">' + pull.html_url + '</a></li>'; 
+            + '<a href=\"' + pull.html_url + '\">' + pull.html_url + '</a></br>'
+            + '<i>Last updated at ' + time[0] + ' on ' + time[1] + '</li>'; 
         }
         html += '</ul>'
         cb(null, html);
@@ -154,5 +156,15 @@ module.exports = function(robot) {
 
   function minutesToMillis(minutes) {
     return minutes * 60 * 1000;
+  }
+
+  function parseDateTime(dateTime) {
+    dateTime = dateTime.split('T');
+    dateTime[1].replace('Z', '');
+    var hourMins = dateTime[1].split(':');
+    hourMins = hourMins[0] + ':' + hourMins[1];
+    var date = dateTime[0].split('-');
+    date = date[1] + '/' + date[2] + '/' + date[0];
+    return [hourMins, date];
   }
 };
