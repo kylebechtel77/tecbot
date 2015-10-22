@@ -59,6 +59,7 @@ module.exports = function(robot) {
           messageHipchatRoom('TECBotTest', html);
         }
       } else {
+        res.send(html);
         res.send("There are no pull requests! (frogparty)");
       }
     });
