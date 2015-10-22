@@ -52,13 +52,11 @@ module.exports = function(robot) {
 
   function annoyEveryoneWithResponse(res) {
     buildHTML(function(err, html) {
-      cooldown++;
-      console.log(cooldown);
       if (err) {
         res.send("There was a problem..." + "\n" + err);
       } else if (html) {
         for (var i = 0; i < roomNames.length; i++) {
-          messageHipchatRoom('TECBotTest', html);
+          messageHipchatRoom(roomNames[i], html);
         }
       } else {
         res.send("There are no pull requests! (frogparty)");
