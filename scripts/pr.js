@@ -70,7 +70,7 @@ module.exports = function(robot) {
     var html = '<b>' + getRandomPrimaryMessage() + '</b><br/><ul>';
     getFullPRList(function (error, prs) {
       if (error) {
-        cb(error, null);
+         return cb(error, null);
       }
       if (prs.length > 0) {
         sortPRsOnTime(prs);
@@ -82,7 +82,7 @@ module.exports = function(robot) {
             + '<i>Last updated ' + pull.time.format('dddd, MMMM Do YYYY [at] h:mm A') + '</i></li>'; 
         }
         html += '</ul>'
-        cb(null, html);
+        return cb(null, html);
       }
       cb(null, undefined);
     });
