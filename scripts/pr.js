@@ -153,14 +153,4 @@ module.exports = function(robot) {
   function minutesToMillis(minutes) {
     return minutes * 60 * 1000;
   }
-
-  function parseDateTime(dateTime) {
-    dateTime = dateTime.split('T');
-    dateTime[1].replace('Z', '');
-    var hourMins = dateTime[1].split(':');
-    hourMins = hourMins[0] + ':' + hourMins[1];
-    var date = dateTime[0].split('-');
-    date = date[1] + '/' + date[2] + '/' + date[0];
-    return [hourMins, date];
-  }
 };
