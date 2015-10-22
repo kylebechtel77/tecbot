@@ -56,7 +56,7 @@ module.exports = function(robot) {
         res.send("There was a problem..." + "\n" + err);
       } else if (html) {
         for (var i = 0; i < roomNames.length; i++) {
-          messageHipchatRoom(roomNames[i], html);
+          messageHipchatRoom('TECBotTest', html);
         }
       } else {
         res.send("There are no pull requests! (frogparty)");
