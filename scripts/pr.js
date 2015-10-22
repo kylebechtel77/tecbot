@@ -3,10 +3,10 @@ module.exports = function(robot) {
   var request = require('request');
   var async = require('async');
 
-  var githubApiKey = process.env.HUBOT_GITHUB_API_KEY;
-  var hipchatApiKey = process.env.HUBOT_HIPCHAT_API_KEY;
-  var roomNames = process.env.HUBOT_HICPHAT_ROOM_NAMES.split(',') || ['TECBotTest'];
-  var repos = process.env.HUBOT_REPOS.split(',');
+  var githubApiKey = process.env.HUBOT_GITHUB_API_KEY || '';
+  var hipchatApiKey = process.env.HUBOT_HIPCHAT_API_KEY || '';
+  var roomNames = (process.env.HUBOT_HICPHAT_ROOM_NAMES || 'TECBotTest').split(',');
+  var repos = (process.env.HUBOT_REPOS || 'tn_job').split(',');
 
   var annoyingThingsToSay = ['Pull request time!', 'Who wants some pull requests?', 'DO THESE PULL REQUESTS NOW!',
    'I got some more pull requests for you guys.', 'Do all the things!', 'FREE PULL REQUESTS!'];
@@ -72,11 +72,11 @@ module.exports = function(robot) {
       if (prs.length > 0) {
         for (var i = 0; i < prs.length; i++) {
           var pull = prs[i];
-          var time = parseDateTime(pull.updated_at);
+          var time = new Date(pull.updated_at)
           html += '<li><strong>' + pull.user.login + '</strong> has open pull request ' 
             + '<strong>' + pull.title + '</strong> in ' + pull.base.repo.name + '</br>'
             + '<a href=\"' + pull.html_url + '\">' + pull.html_url + '</a></br>'
-            + '<i>Last updated at ' + time[0] + ' on ' + time[1] + '</li>'; 
+            + '<i>Last updated ' + time.toUTCString() + '</i></li>'; 
         }
         html += '</ul>'
         cb(null, html);
@@ -86,7 +86,7 @@ module.exports = function(robot) {
   }    
 
   function getPullRequests(repo, cb) {
-    request({ 
+    request({
       url: 'https://api.github.com/repos/cbdr/' + repo + '/pulls',
       qs: {access_token: githubApiKey},
       method: 'GET',
@@ -132,8 +132,6 @@ module.exports = function(robot) {
         'notify': true,
         'message_format': 'html'
       }
-    }, function(error, response, body) {
-      console.log("Message sent to " + room + ".");
     });
   }
 
@@ -141,10 +139,8 @@ module.exports = function(robot) {
     var d = new Date();
     var m = d.getMinutes();
     var s = d.getSeconds();
-    console.log('Currently ' + m + ' minutes and ' + s + ' seconds into hour.');
     var fullSeconds = m * 60 + s;
     var leftSeconds = 60 * 60 - fullSeconds;
-    console.log(fullSeconds+ ' in hour ' + leftSeconds + ' seconds left until hour.');
     setTimeout(function () {
       setPRsOn(cooldown);
     }, 1000 * leftSeconds);
