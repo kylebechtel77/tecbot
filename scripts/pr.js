@@ -2,7 +2,8 @@ module.exports = function(robot) {
   var querystring = require('querystring');
   var request = require('request');
   var async = require('async');
-
+  var moment = require('moment-timezone');
+  
   var githubApiKey = process.env.HUBOT_GITHUB_API_KEY || '';
   var hipchatApiKey = process.env.HUBOT_HIPCHAT_API_KEY || '';
   var roomNames = (process.env.HUBOT_HICPHAT_ROOM_NAMES || 'TECBotTest').split(',');
@@ -70,13 +71,13 @@ module.exports = function(robot) {
         cb(error, null);
       }
       if (prs.length > 0) {
+        sortPRsOnTime(prs);
         for (var i = 0; i < prs.length; i++) {
           var pull = prs[i];
-          var time = new Date(pull.updated_at)
           html += '<li><strong>' + pull.user.login + '</strong> has open pull request ' 
             + '<strong>' + pull.title + '</strong> in ' + pull.base.repo.name + '</br>'
             + '<a href=\"' + pull.html_url + '\">' + pull.html_url + '</a></br>'
-            + '<i>Last updated ' + time.toUTCString() + '</i></li>'; 
+            + '<i>Last updated ' + pull.time.format('dddd, MMMM Do YYYY at h:mm A') + '</i></li>'; 
         }
         html += '</ul>'
         cb(null, html);
@@ -152,5 +153,21 @@ module.exports = function(robot) {
 
   function minutesToMillis(minutes) {
     return minutes * 60 * 1000;
+  }
+
+  function sortPRsOnTime(prs) {
+    prs.forEach(function(element, index, array) {
+      var time = moment(element.updated_at).tz('America/New_York');
+      element.time = time;
+    });
+
+    prs.sort(function (x, y) {
+      if (x.time.isBefore(y.time)) {
+        return -1;
+      } else if (y.time.isBefore(x.time)) {
+        return 1;
+      }
+      return 0;
+    });
   }
 };
