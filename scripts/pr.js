@@ -52,6 +52,8 @@ module.exports = function(robot) {
 
   function annoyEveryoneWithResponse(res) {
     buildHTML(function(err, html) {
+      cooldown++;
+      console.log(cooldown);
       if (err) {
         res.send("There was a problem..." + "\n" + err);
       } else if (html) {
@@ -59,7 +61,6 @@ module.exports = function(robot) {
           messageHipchatRoom('TECBotTest', html);
         }
       } else {
-        res.send(html);
         res.send("There are no pull requests! (frogparty)");
       }
     });
