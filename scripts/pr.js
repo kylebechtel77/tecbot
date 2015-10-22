@@ -3,7 +3,7 @@ module.exports = function(robot) {
   var request = require('request');
   var async = require('async');
   var moment = require('moment-timezone');
-  
+
   var githubApiKey = process.env.HUBOT_GITHUB_API_KEY || '';
   var hipchatApiKey = process.env.HUBOT_HIPCHAT_API_KEY || '';
   var roomNames = (process.env.HUBOT_HICPHAT_ROOM_NAMES || 'TECBotTest').split(',');
@@ -77,7 +77,7 @@ module.exports = function(robot) {
           html += '<li><strong>' + pull.user.login + '</strong> has open pull request ' 
             + '<strong>' + pull.title + '</strong> in ' + pull.base.repo.name + '</br>'
             + '<a href=\"' + pull.html_url + '\">' + pull.html_url + '</a></br>'
-            + '<i>Last updated ' + pull.time.format('dddd, MMMM Do YYYY at h:mm A') + '</i></li>'; 
+            + '<i>Last updated ' + pull.time.format('dddd, MMMM Do YYYY [at] h:mm A') + '</i></li>'; 
         }
         html += '</ul>'
         cb(null, html);
