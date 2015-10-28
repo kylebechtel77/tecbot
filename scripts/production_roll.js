@@ -82,7 +82,7 @@ module.exports = function(robot) {
   		days = 5;
   	}
   	return messages[days] + '<b>' + fromNow + '.</b></br>'
-  		+ '<i>' + author + ':</i><a href="' + link + '">' + link + '</a>';
+  		+ author + ': <a href="' + link + '">' + link + '</a>';
   }
 
   function getColor(days) {
