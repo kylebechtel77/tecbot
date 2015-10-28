@@ -1,5 +1,7 @@
 module.exports = function(robot) {
 	var moment = require('moment-timezone');
+  var request = require('request');
+
 
 	var githubApiKey = process.env.HUBOT_GITHUB_API_KEY || '';
   var hipchatApiKey = process.env.HUBOT_HIPCHAT_API_KEY || '';
@@ -20,8 +22,8 @@ module.exports = function(robot) {
 
 	function setNotificationsOn() {
 		getLastProductionCommits(function(err, data) {
-			if (err || !data) {
-				console.log('Problem retrieving data.\n' + err);
+			if (err || !data || !data[0]) {
+				console.log('Problem retrieving data.\n' + err + '\n' + data);
 				return;
 			}
 			var lastCommit = data[0];
