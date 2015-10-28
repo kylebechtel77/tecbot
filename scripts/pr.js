@@ -6,7 +6,7 @@ module.exports = function(robot) {
 
   var githubApiKey = process.env.HUBOT_GITHUB_API_KEY || '';
   var hipchatApiKey = process.env.HUBOT_HIPCHAT_API_KEY || '';
-  var roomNames = (/*process.env.HUBOT_HICPHAT_ROOM_NAMES || */'TECBotTest').split(',');
+  var roomNames = (process.env.HUBOT_HICPHAT_ROOM_NAMES || 'TECBotTest').split(',');
   var repos = (process.env.HUBOT_REPOS || 'tn_job').split(',');
 
   var annoyingThingsToSay = ['Pull request time!', 'Who wants some pull requests?', 'DO THESE PULL REQUESTS NOW!',
@@ -14,7 +14,6 @@ module.exports = function(robot) {
 
   var annoyFunction;
   var cooldown = 60;
-  annoyEveryone();
   waitForHour(cooldown);
 
   robot.hear(/\/prs now/i, function(res) {
@@ -138,14 +137,14 @@ module.exports = function(robot) {
   }
 
   function waitForHour(cooldown) {
-    var d = new Date();
-    var m = d.getMinutes();
-    var s = d.getSeconds();
-    var fullSeconds = m * 60 + s;
-    var leftSeconds = 60 * 60 - fullSeconds;
+    var now = moment();
+    var onHour = moment();
+    onHour.add(1, 'hours');
+    onHour.minutes(0);
+    onHour.seconds(0);
     setTimeout(function () {
       setPRsOn(cooldown);
-    }, 1000 * leftSeconds);
+    }, onHour.diff(now));
   }
 
   function getRandomPrimaryMessage() {
