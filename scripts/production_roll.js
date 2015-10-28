@@ -28,6 +28,7 @@ module.exports = function(robot) {
 			}
 			var lastCommit = data[0];
 			var author = lastCommit.author.login;
+			var link = lastCommit.html_url;
 			var then = moment(lastCommit.commit.author.date).tz('America/New_York');
 
 			var fromNow = then.fromNow();
@@ -36,7 +37,7 @@ module.exports = function(robot) {
 			var days = then.diff(now, 'days');
 
 			var color = getColor(days);	
-			var msg = getMessage(fromNow, days);
+			var msg = getMessage(author, link, fromNow, days);
 
 			roomNames.forEach(function (element, index, array) {
 				messageHipchatRoom(element, msg, color);
@@ -76,11 +77,12 @@ module.exports = function(robot) {
     });
   }
 
-  function getMessage(fromNow, days) {
+  function getMessage(author, link, fromNow, days) {
   	if (days > 5) {
   		days = 5;
   	}
-  	return messages[days] + '<b>' + fromNow + '.</b>'
+  	return messages[days] + '<b>' + fromNow + '.</b></br>'
+  		+ '<i>' + author + ':</i><a href="' + link + '">' + link + '</a>';
   }
 
   function getColor(days) {
