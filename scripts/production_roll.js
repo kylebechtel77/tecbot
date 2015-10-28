@@ -7,7 +7,7 @@ module.exports = function(robot) {
   var hipchatApiKey = process.env.HUBOT_HIPCHAT_API_KEY || '';
 	var productionRepo = process.env.HUBOT_PRODUCTION_REPO || '';
 	var productionBranch = process.env.HUBOT_PRODUCTION_BRANCH || '';
-  var roomNames = ('TECBotTest').split(',');
+  var roomNames = (process.env.HUBOT_HICPHAT_ROOM_NAMES || 'TECBotTest').split(',');
   var messages = [
   	'Good job! The last production roll was ', 
   	'Let\'s get a production roll today! The last one was ', 
@@ -17,10 +17,20 @@ module.exports = function(robot) {
   	'Starving for a production roll! The last one was '
   ];
 
-  setNotificationsOn();
+  var annoyInterval;
+  var millisInDay = 86400000;
+
 	waitFor945();
 
 	function setNotificationsOn() {
+		clearInterval(annoyInterval);
+		sendNotification();
+		annoyInterval = setInterval(function () {
+			sendNotification();
+		}, millisInDay)
+	}
+
+	function sendNotification() {
 		getLastProductionCommits(function(err, data) {
 			if (err || !data || !data[0]) {
 				console.log('Problem retrieving data.\n' + err + '\n' + data);
