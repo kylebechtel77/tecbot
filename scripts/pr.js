@@ -6,7 +6,7 @@ module.exports = function(robot) {
 
   var githubApiKey = process.env.HUBOT_GITHUB_API_KEY || '';
   var hipchatApiKey = process.env.HUBOT_HIPCHAT_API_KEY || '';
-  var roomNames = (process.env.HUBOT_HICPHAT_ROOM_NAMES || 'TECBotTest').split(',');
+  var roomNames = (/*process.env.HUBOT_HICPHAT_ROOM_NAMES || */'TECBotTest').split(',');
   var repos = (process.env.HUBOT_REPOS || 'tn_job').split(',');
 
   var annoyingThingsToSay = ['Pull request time!', 'Who wants some pull requests?', 'DO THESE PULL REQUESTS NOW!',
@@ -14,6 +14,7 @@ module.exports = function(robot) {
 
   var annoyFunction;
   var cooldown = 60;
+  annoyEveryone();
   waitForHour(cooldown);
 
   robot.hear(/\/prs now/i, function(res) {
@@ -77,7 +78,7 @@ module.exports = function(robot) {
           html += '<li><strong>' + pull.user.login + '</strong> has open pull request ' 
             + '<strong>' + pull.title + '</strong> in ' + pull.base.repo.name + '</br>'
             + '<a href=\"' + pull.html_url + '\">' + pull.html_url + '</a></br>'
-            + '<i>Last updated ' + pull.time.format('dddd, MMMM Do YYYY [at] h:mm A') + '</i></li>'; 
+            + '<i>Last updated ' + pull.time.fromNow() + '</i></li>'; 
         }
         html += '</ul>'
         return cb(null, html);
