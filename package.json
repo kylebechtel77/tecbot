@@ -21,7 +21,8 @@
     "hubot-shipit": "^0.2.0",
     "hubot-youtube": "^0.1.2",
     "moment-timezone": "^0.4.1",
-    "request": "^2.65.0"
+    "request": "^2.65.0",
+    "node-schedule": "0.2.9"
   },
   "engines": {
     "node": "0.10.x"
