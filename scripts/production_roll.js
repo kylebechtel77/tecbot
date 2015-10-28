@@ -1,8 +1,10 @@
 module.exports = function(robot) {
 	var moment = require('moment-timezone');
 
-	var productionRepo = process.env.HUBOT_PRODUCTION_REPO;
-	var productionBranch = process.env.HUBOT_PRODUCTION_BRANCH;
+	var githubApiKey = process.env.HUBOT_GITHUB_API_KEY || '';
+  var hipchatApiKey = process.env.HUBOT_HIPCHAT_API_KEY || '';
+	var productionRepo = process.env.HUBOT_PRODUCTION_REPO || '';
+	var productionBranch = process.env.HUBOT_PRODUCTION_BRANCH || '';
   var roomNames = ('TECBotTest').split(',');
   var messages = [
   	'Good job! The last production roll was ', 
