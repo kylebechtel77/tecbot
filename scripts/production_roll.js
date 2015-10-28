@@ -15,7 +15,7 @@ module.exports = function(robot) {
   	'Starving for a production roll! The last one was '
   ];
 
-
+  setNotificationsOn();
 	waitFor945();
 
 	function setNotificationsOn() {
@@ -97,8 +97,8 @@ module.exports = function(robot) {
 		var now = moment();
 		var then = moment();
 		var millis;
-		then.hours(12);
-		then.minutes(30);
+		then.hours(9);
+		then.minutes(45);
 		then.seconds(0);
 		if (now.isBefore(then)) {
 			millis = then.diff(now);
