@@ -114,6 +114,7 @@ module.exports = function(robot) {
 		then.hours(9);
 		then.minutes(45);
 		then.seconds(0);
+		then.tz('America/New_York')
 		if (now.isBefore(then)) {
 			millis = then.diff(now);
 		} else {
