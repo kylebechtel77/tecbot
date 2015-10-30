@@ -21,6 +21,10 @@ module.exports = function(robot) {
 
 	waitFor945();
 
+	robot.hear(/\/production/i, function(res) {
+		sendNotification();
+	});
+
 	function setNotificationsOn() {
 		clearInterval(annoyInterval);
 		sendNotification();
