@@ -2,7 +2,6 @@ module.exports = function(robot) {
 	var moment = require('moment-timezone');
   var request = require('request');
 
-
 	var githubApiKey = process.env.HUBOT_GITHUB_API_KEY || '';
   var hipchatApiKey = process.env.HUBOT_HIPCHAT_API_KEY || '';
 	var productionRepo = process.env.HUBOT_PRODUCTION_REPO || '';
@@ -108,18 +107,19 @@ module.exports = function(robot) {
   }
 
 	function waitFor945() {
-		var now = moment();
-		var then = moment();
+		var now = moment().tz('America/New_York');
+		var then = now.clone().tz('America/New_York');
 		var millis;
 		then.hours(9);
 		then.minutes(45);
 		then.seconds(0);
-		then.tz('America/New_York')
 		if (now.isBefore(then)) {
 			millis = then.diff(now);
+			console.log(millis);
 		} else {
 			then.add(1, 'd');
 			var millis = then.diff(now);
+			console.log(millis);
 		}
 		setTimeout(function() {
 			setNotificationsOn();
