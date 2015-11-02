@@ -30,7 +30,7 @@ module.exports = function(robot) {
 		sendNotification();
 		annoyInterval = setInterval(function () {
 			sendNotification();
-		}, millisInDay)xx
+		}, millisInDay);
 	}
 
 	function sendNotification() {
