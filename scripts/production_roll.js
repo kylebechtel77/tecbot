@@ -6,14 +6,14 @@ module.exports = function(robot) {
   var hipchatApiKey = process.env.HUBOT_HIPCHAT_API_KEY || '';
 	var productionRepo = process.env.HUBOT_PRODUCTION_REPO || '';
 	var productionBranch = process.env.HUBOT_PRODUCTION_BRANCH || '';
-  var roomNames = (process.env.HUBOT_HICPHAT_ROOM_NAMES || 'TECBotTest').split(',');
+  var roomNames = ('TECBotTest').split(',');
   var messages = [
-  	'Good job! The last production roll was ', 
-  	'Let\'s get a production roll today! The last one was ', 
-  	'We should do a production roll today. The last one was ', 
-  	'We really could use a production roll. The last one was ', 
-  	'It\'s been a while since the last production roll... The last one was ', 
-  	'Starving for a production roll! The last one was '
+  	'Good job! The last production roll was', 
+  	'Let\'s get a production roll today! The last one was', 
+  	'We should do a production roll today. The last one was', 
+  	'We really could use a production roll. The last one was', 
+  	'It\'s been a while since the last production roll... The last one was', 
+  	'Starving for a production roll! The last one was'
   ];
 
   var annoyInterval;
@@ -94,7 +94,8 @@ module.exports = function(robot) {
   	if (days > 5) {
   		days = 5;
   	}
-  	return messages[days] + '<b>' + fromNow + '.</b></br>'
+  	console.log(days);
+  	return messages[days] + ' <b>' + fromNow + '.</b></br>'
   		+ author + ': <a href="' + link + '">' + link + '</a>';
   }
 
@@ -119,11 +120,9 @@ module.exports = function(robot) {
 		then.seconds(0);
 		if (now.isBefore(then)) {
 			millis = then.diff(now);
-			console.log(millis);
 		} else {
 			then.add(1, 'd');
 			var millis = then.diff(now);
-			console.log(millis);
 		}
 		setTimeout(function() {
 			setNotificationsOn();

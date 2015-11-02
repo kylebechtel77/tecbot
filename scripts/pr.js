@@ -33,11 +33,11 @@ module.exports = function(robot) {
   }
 
   function annoyEveryone() {
-    var d = new Date();
-    var h = d.getHours() - 4;
-    var w = d.getDay();
-    console.log(w + ' day of the week and ' + h + ' hour.')
-    if (h > 6 && h < 20 && w > 0 && w < 6) {
+    var now = moment().tz('America/New_York');
+    var h = now.hours();
+    var d = now.days();
+    console.log(d + ' day of the week and ' + h + ' hour.')
+    if (h > 6 && h < 20 && d > 0 && d < 6) {
       buildHTML(function(error, html) {
         if (error) {
           console.log("There was a problem..." + "\n" + error);
