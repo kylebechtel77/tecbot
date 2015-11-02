@@ -6,7 +6,7 @@ module.exports = function(robot) {
   var hipchatApiKey = process.env.HUBOT_HIPCHAT_API_KEY || '';
 	var productionRepo = process.env.HUBOT_PRODUCTION_REPO || '';
 	var productionBranch = process.env.HUBOT_PRODUCTION_BRANCH || '';
-  var roomNames = ('TECBotTest').split(',');
+  var roomNames = (process.env.HUBOT_HICPHAT_ROOM_NAMES || 'TECBotTest').split(',');
   var messages = [
   	'Good job! The last production roll was', 
   	'Let\'s get a production roll today! The last one was', 
@@ -30,7 +30,7 @@ module.exports = function(robot) {
 		sendNotification();
 		annoyInterval = setInterval(function () {
 			sendNotification();
-		}, millisInDay)
+		}, millisInDay)xx
 	}
 
 	function sendNotification() {
