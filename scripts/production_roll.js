@@ -47,7 +47,7 @@ module.exports = function(robot) {
 			var fromNow = then.fromNow();
 
 			var now = moment();
-			var days = then.diff(now, 'days');
+			var days = now.diff(then, 'days');
 
 			var color = getColor(days);	
 			var msg = getMessage(author, link, fromNow, days);
@@ -94,7 +94,6 @@ module.exports = function(robot) {
   	if (days > 5) {
   		days = 5;
   	}
-  	console.log(days);
   	return messages[days] + ' <b>' + fromNow + '.</b></br>'
   		+ author + ': <a href="' + link + '">' + link + '</a>';
   }
