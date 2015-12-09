@@ -63,6 +63,8 @@ module.exports = function(robot) {
   function annoyEveryoneWithResponse(res) {
     var target = res.message.room;
     console.log(target);
+    console.log(res.message);
+    console.log(res);
     roomAssociations.forEach(function (association, i, associations) {
       association.rooms.forEach(function (room, j, rooms) {
         if (room == target) {
