@@ -1,13 +1,21 @@
 module.exports = function(robot) {
-  var querystring = require('querystring');
   var request = require('request');
   var async = require('async');
   var moment = require('moment-timezone');
 
   var githubApiKey = process.env.HUBOT_GITHUB_API_KEY || '';
   var hipchatApiKey = process.env.HUBOT_HIPCHAT_API_KEY || '';
-  var roomNames = (process.env.HUBOT_HICPHAT_ROOM_NAMES || 'TECBotTest').split(',');
-  var repos = (process.env.HUBOT_REPOS || 'tn_job').split(',');
+
+  var defaultAssociation = [{ 
+    "rooms": [
+      "TECBotTest"
+    ], 
+    "repos": [  
+      "tn_job" 
+    ]
+  }];
+  var roomAssociations = process.env.HUBOT_HIPCHAT_ASSOCIATION || JSON.stringify(defaultAssociation);
+  roomAssociations = JSON.parse(roomAssociations);
 
   var annoyingThingsToSay = ['Pull request time!', 'Who wants some pull requests?', 'DO THESE PULL REQUESTS NOW!',
    'I got some more pull requests for you guys.', 'Do all the things!', 'FREE PULL REQUESTS!'];
@@ -37,35 +45,42 @@ module.exports = function(robot) {
     var h = now.hours();
     var d = now.days();
     if (h > 6 && h < 20 && d > 0 && d < 6) {
-      buildHTML(function(error, html) {
-        if (error) {
-          console.log("There was a problem..." + "\n" + error);
-        } else if (html) {
-          for (var i = 0; i < roomNames.length; i++) {
-            messageHipchatRoom(roomNames[i], html);
-          }
-        } 
+      roomAssociations.forEach(function (association, i, associations) {
+        buildHTML(association.repos, function(error, html) {
+          if (error) {
+            console.log("There was a problem..." + "\n" + error);
+          } else if (html) {
+            for (var j = 0; j < association.rooms.length; j++) {
+              messageHipchatRoom(association.rooms[j], html);
+            }
+          } 
+        });
       });
     }
   }
 
   function annoyEveryoneWithResponse(res) {
-    buildHTML(function(err, html) {
-      if (err) {
-        res.send("There was a problem..." + "\n" + err);
-      } else if (html) {
-        for (var i = 0; i < roomNames.length; i++) {
-          messageHipchatRoom(roomNames[i], html);
+    var target = res.message.room;
+    roomAssociations.forEach(function (association, i, associations) {
+      association.rooms.forEach(function (room, j, rooms) {
+        if (room == target) {
+          buildHTML(association.repos, function(err, html) {
+            if (err) {
+              res.send("There was a problem..." + "\n" + err);
+            } else if (html) {
+              messageHipchatRoom(room, html);
+            } else {
+              res.send("There are no pull requests! (pizzadance)");
+            }
+          });
         }
-      } else {
-        res.send("There are no pull requests! (frogparty)");
-      }
+      });
     });
   }
 
-  function buildHTML(cb) {
-    var html = '<b>' + getRandomPrimaryMessage() + '</b><br/><ul>';
-    getFullPRList(function (error, prs) {
+  function buildHTML(repos, cb) {
+    var html = '<b>' + getRandomElement(annoyingThingsToSay) + '</b><br/><ul>';
+    getFullPRList(repos, function (error, prs) {
       if (error) {
          return cb(error, null);
       }
@@ -99,7 +114,7 @@ module.exports = function(robot) {
     });
   }
 
-  function getFullPRList(cb) {
+  function getFullPRList(repos, cb) {
     var tasks = {};
     repos.forEach(function (element, index, array) {
       tasks[element] = function (callback) {
@@ -135,6 +150,19 @@ module.exports = function(robot) {
     });
   }
 
+  function getAllHipchatEmoticons(cb) {
+    request({
+      url: 'https://api.hipchat.com/v2/emoticon',
+      qs: {
+        'auth_token': hipchatApiKey,
+        'max-results': 1000
+      },
+      method: 'GET',
+    }, function (error, response, body) {
+      cb(error, JSON.parse(body));
+    });
+  }
+
   function waitForHour(cooldown) {
     var now = moment();
     var onHour = moment();
@@ -146,8 +174,8 @@ module.exports = function(robot) {
     }, onHour.diff(now));
   }
 
-  function getRandomPrimaryMessage() {
-    return annoyingThingsToSay[Math.floor(Math.random()*annoyingThingsToSay.length)];
+  function getRandomElement(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
   }
 
   function minutesToMillis(minutes) {

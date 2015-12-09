@@ -7,6 +7,7 @@ module.exports = function(robot) {
 	var productionRepo = process.env.HUBOT_PRODUCTION_REPO || '';
 	var productionBranch = process.env.HUBOT_PRODUCTION_BRANCH || '';
   var roomNames = (process.env.HUBOT_HICPHAT_ROOM_NAMES || 'TECBotTest').split(',');
+  
   var messages = [
   	'Good job! The last production roll was', 
   	'Let\'s get a production roll today! The last one was', 
