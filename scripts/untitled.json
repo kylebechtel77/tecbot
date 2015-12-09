@@ -2,29 +2,28 @@
 	{
 		"rooms": [
 			{ 
-				"name": "TECBotTest",
-				"id": "1878664"
-			},
-			{
-				"name": "Career Site Software (CMS)",
-				"id": "808078"
+				"name": "TestRoom1",
+				"id": "0000000"
 			}
 		 ],
 		"repos": [
-			"bravo",
-			"CMSPencilblue",
-			"careerbuilder_careers",
-			"gtm",
-			"pencilblue_facebook",
-			"pencilblue_rssfeeder",
-			"pencilblue_sitemap",
-			"pencilblue_twitter",
-			"route53",
-			"s3-pencilblue",
-			"tn_job",
-			"tn_join",
-			"premium",
-			"tn_legal"
+			"example_repo1",
+			"example_repo2"
+		]
+	},
+	{
+		"rooms": [
+			{
+				"name": "TestRoom2",
+				"id": "0000001"
+			},
+			{
+				"name": "TestRoom3",
+				"id": "0000002"
+			}
+		],
+		"repos": [
+			"example_repo3"
 		]
 	}
 ]
