@@ -62,13 +62,16 @@ module.exports = function(robot) {
 
   function annoyEveryoneWithResponse(res) {
     var target = res.message.room;
+    console.log(target);
     roomAssociations.forEach(function (association, i, associations) {
       association.rooms.forEach(function (room, j, rooms) {
         if (room == target) {
+          console.log(room + " found!");
           buildHTML(association.repos, function(err, html) {
             if (err) {
               res.send("There was a problem..." + "\n" + err);
             } else if (html) {
+              console.log("messaging");
               messageHipchatRoom(room, html);
             } else {
               res.send("There are no pull requests! (pizzadance)");
@@ -138,6 +141,7 @@ module.exports = function(robot) {
   }
 
   function messageHipchatRoom(room, msg) {
+    console.log("Message: " + msg); 
     request({
       url: 'https://api.hipchat.com/v2/room/' + room + '/notification',
       qs: {auth_token: hipchatApiKey},
