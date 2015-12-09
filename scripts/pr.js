@@ -16,7 +16,6 @@ module.exports = function(robot) {
   }];
   var roomAssociations = process.env.HUBOT_HIPCHAT_ROOM_ASSOCIATIONS || JSON.stringify(defaultAssociation);
   roomAssociations = JSON.parse(roomAssociations);
-  console.log(roomAssociations);
 
   var annoyingThingsToSay = ['Pull request time!', 'Who wants some pull requests?', 'DO THESE PULL REQUESTS NOW!',
    'I got some more pull requests for you guys.', 'Do all the things!', 'FREE PULL REQUESTS!'];
@@ -65,18 +64,13 @@ module.exports = function(robot) {
   // room ID to send notifications. This is the reason for the weird object structure.
   function annoyEveryoneWithResponse(res) {
     var target = res.message.room.toLowerCase();
-    console.log(target);
-    console.log(res.message);
-    console.log(res);
     roomAssociations.forEach(function (association, i, associations) {
       association.rooms.forEach(function (room, j, rooms) {
         if (room.name.toLowerCase() == target) {
-          console.log(room + " found!");
           buildHTML(association.repos, function(err, html) {
             if (err) {
               res.send("There was a problem..." + "\n" + err);
             } else if (html) {
-              console.log("messaging");
               messageHipchatRoom(room.id, html);
             } else {
               res.send("There are no pull requests! (pizzadance)");
