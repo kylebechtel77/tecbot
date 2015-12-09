@@ -1,8 +1,14 @@
 [
 	{
-		"room": [
-			"Career Site Software (CMS)",
-		 	"TECBotTest"
+		"rooms": [
+			{ 
+				"name": "TECBotTest",
+				"id": "1878664"
+			},
+			{
+				"name": "Career Site Software (CMS)",
+				"id": "808078"
+			}
 		 ],
 		"repos": [
 			"bravo",

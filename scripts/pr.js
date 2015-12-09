@@ -52,7 +52,7 @@ module.exports = function(robot) {
             console.log("There was a problem..." + "\n" + error);
           } else if (html) {
             for (var j = 0; j < association.rooms.length; j++) {
-              messageHipchatRoom(association.rooms[j], html);
+              messageHipchatRoom(association.rooms[j].name, html);
             }
           } 
         });
@@ -60,21 +60,24 @@ module.exports = function(robot) {
     }
   }
 
+  // Used for /prs now. Unfortunately, because Hipchat's room notifications api is case sensitive
+  // and because the res object here stores the room name as all lower case, I have to use the 
+  // room ID to send notifications. This is the reason for the weird object structure.
   function annoyEveryoneWithResponse(res) {
-    var target = res.message.room;
+    var target = res.message.room.toLowerCase();
     console.log(target);
     console.log(res.message);
     console.log(res);
     roomAssociations.forEach(function (association, i, associations) {
       association.rooms.forEach(function (room, j, rooms) {
-        if (room == target) {
+        if (room.name.toLowerCase() == target) {
           console.log(room + " found!");
           buildHTML(association.repos, function(err, html) {
             if (err) {
               res.send("There was a problem..." + "\n" + err);
             } else if (html) {
               console.log("messaging");
-              messageHipchatRoom(room, html);
+              messageHipchatRoom(room.id, html);
             } else {
               res.send("There are no pull requests! (pizzadance)");
             }
@@ -142,10 +145,9 @@ module.exports = function(robot) {
     });
   }
 
-  function messageHipchatRoom(room, msg) {
-    console.log("Message: " + msg); 
+  function messageHipchatRoom(roomNameOrID, msg) {
     request({
-      url: 'https://api.hipchat.com/v2/room/' + room + '/notification',
+      url: 'https://api.hipchat.com/v2/room/' + roomNameOrID + '/notification',
       qs: {auth_token: hipchatApiKey},
       method: 'POST',
       json: {
