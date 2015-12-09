@@ -1,0 +1,24 @@
+[
+	{
+		"room": [
+			"Career Site Software (CMS)",
+		 	"TECBotTest"
+		 ],
+		"repos": [
+			"bravo",
+			"CMSPencilblue",
+			"careerbuilder_careers",
+			"gtm",
+			"pencilblue_facebook",
+			"pencilblue_rssfeeder",
+			"pencilblue_sitemap",
+			"pencilblue_twitter",
+			"route53",
+			"s3-pencilblue",
+			"tn_job",
+			"tn_join",
+			"premium",
+			"tn_legal"
+		]
+	}
+]

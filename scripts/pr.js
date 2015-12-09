@@ -14,8 +14,9 @@ module.exports = function(robot) {
       "tn_job" 
     ]
   }];
-  var roomAssociations = process.env.HUBOT_HIPCHAT_ASSOCIATION || JSON.stringify(defaultAssociation);
+  var roomAssociations = process.env.HUBOT_HIPCHAT_ROOM_ASSOCIATIONS || JSON.stringify(defaultAssociation);
   roomAssociations = JSON.parse(roomAssociations);
+  console.log(roomAssociations);
 
   var annoyingThingsToSay = ['Pull request time!', 'Who wants some pull requests?', 'DO THESE PULL REQUESTS NOW!',
    'I got some more pull requests for you guys.', 'Do all the things!', 'FREE PULL REQUESTS!'];
