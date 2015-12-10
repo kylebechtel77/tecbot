@@ -64,8 +64,10 @@ module.exports = function(robot) {
   // room ID to send notifications. This is the reason for the weird object structure.
   function annoyEveryoneWithResponse(res) {
     var target = res.message.room.toLowerCase();
+    console.log(target);
     roomAssociations.forEach(function (association, i, associations) {
       association.rooms.forEach(function (room, j, rooms) {
+        console.log(room.name.toLowerCase());
         if (room.name.toLowerCase() == target) {
           buildHTML(association.repos, function(err, html) {
             if (err) {
