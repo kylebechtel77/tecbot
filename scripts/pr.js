@@ -66,7 +66,7 @@ module.exports = function(robot) {
     var target = res.message.room.toLowerCase();
     roomAssociations.forEach(function (association, i, associations) {
       association.rooms.forEach(function (room, j, rooms) {
-        if (room.name.toLowerCase() == target || room.old_name.toLowerCase() == target) {
+        if (room.name.toLowerCase() == target || (room.old_name && room.old_name.toLowerCase() == target)) {
           buildHTML(association.repos, function(err, html) {
             if (err) {
               res.send("There was a problem..." + "\n" + err);
