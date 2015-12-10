@@ -3,6 +3,7 @@
 		"rooms": [
 			{ 
 				"name": "TestRoom1",
+				"old_name": "TestRoomOld1",
 				"id": "0000000"
 			}
 		 ],

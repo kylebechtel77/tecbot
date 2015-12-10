@@ -64,11 +64,9 @@ module.exports = function(robot) {
   // room ID to send notifications. This is the reason for the weird object structure.
   function annoyEveryoneWithResponse(res) {
     var target = res.message.room.toLowerCase();
-    console.log(res.message);
     roomAssociations.forEach(function (association, i, associations) {
       association.rooms.forEach(function (room, j, rooms) {
-        console.log(room.name.toLowerCase());
-        if (room.name.toLowerCase() == target) {
+        if (room.name.toLowerCase() == target || room.old_name.toLowerCase() == target) {
           buildHTML(association.repos, function(err, html) {
             if (err) {
               res.send("There was a problem..." + "\n" + err);
@@ -152,6 +150,16 @@ module.exports = function(robot) {
         'notify': true,
         'message_format': 'html'
       }
+    });
+  }
+
+  function getHipchatRoom(roomName, cb) {
+    request({
+      url: 'https://api.hipchat.com/v2/room/' + roomName,
+      qs: {auth_token: hipchatApiKey},
+      method: 'GET',
+    }, function (error, response, body) {
+      cb(error, body);
     });
   }
 
