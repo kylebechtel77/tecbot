@@ -8,17 +8,27 @@ module.exports = function(robot) {
     { 
       "rooms": [ 
         { 
-          "name": "TECBotTest", 
-          "id": "1878664" 
+          "name": "TestRoom0", 
+          "id": "0000001" 
         }, 
         { 
-          "name": "Career Site Software (CMS)", 
-          "old_name": "TN_To_VPC", 
-          "id": "808078" 
+          "name": "TestRoom1", 
+          "old_name": "OldTestRoom1", 
+          "id": "0000002" 
         } 
       ], 
-      "production_repo": "CMSPencilBlue",
-      "production_branch": "production"
+      "production_repo": "TestRepo1",
+      "production_branch": "production_branch"
+    },
+    {
+      "rooms": [ 
+        { 
+          "name": "TestRoom2", 
+          "id": "0000003" 
+        }
+      ], 
+      "production_repo": "TestRepo2",
+      "production_branch": "production_branchy"
     } 
   ];
 
@@ -110,7 +120,7 @@ module.exports = function(robot) {
       });
     });
   }
-  
+
 	function getLastProductionCommits(repo, branch, cb) {
 		request({
 		  url: 'https://api.github.com/repos/cbdr/' + repo + '/commits',
