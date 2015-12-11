@@ -32,8 +32,9 @@ module.exports = function(robot) {
     } 
   ];
 
+  console.log("WHY WHY WHY WHY");
   var productionAssociations = process.env.HUBOT_HIPCHAT_PRODUCTION_ASSOCIATIONS || JSON.stringify(defaultAssociation);
-  console.log(productionAssociations);
+  console.log("WHY WHY WHY 222 \n" + productionAssociations);
   productionAssociations = JSON.parse(productionAssociations.trim());
 
   var messages = [
