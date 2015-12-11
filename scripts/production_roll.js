@@ -32,10 +32,9 @@ module.exports = function(robot) {
     } 
   ];
 
-  console.log("WHY WHY WHY WHY");
   var productionAssociations = process.env.HUBOT_HIPCHAT_PRODUCTION_ASSOCIATIONS || JSON.stringify(defaultAssociation);
-  console.log("WHY WHY WHY 222 \n" + productionAssociations);
-  productionAssociations = JSON.parse(productionAssociations.trim());
+  console.log(productionAssociations);
+  productionAssociations = JSON.parse(productionAssociations);
 
   var messages = [
   	'Good job! The last production roll was', 
