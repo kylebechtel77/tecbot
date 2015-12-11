@@ -32,7 +32,7 @@ module.exports = function(robot) {
     } 
   ];
 
-  var productionAssociations = process.env.HUBOT_PRODUCTION_ASSOCIATIONS || JSON.stringify(defaultAssociation);
+  var productionAssociations = process.env.HUBOT_HIPCHAT_PRODUCTION_ASSOCIATIONS || JSON.stringify(defaultAssociation);
   productionAssociations = JSON.parse(productionAssociations);
 
   var messages = [
