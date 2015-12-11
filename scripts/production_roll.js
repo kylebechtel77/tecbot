@@ -66,8 +66,19 @@ module.exports = function(robot) {
 				return;
 			}
 
-			var msg = buildMessage(data);
-			  
+			var lastCommit = data[0];
+      var author = lastCommit.author.login;
+      var link = lastCommit.html_url;
+      var then = moment(lastCommit.commit.author.date).tz('America/New_York');
+
+      var fromNow = then.fromNow();
+
+      var now = moment();
+      var days = now.diff(then, 'days');
+
+      var color = getColor(days); 
+      var msg = getMessage(author, link, fromNow, days);  
+		  
       messageHipchatRoom(room, msg, color);
 		});
 	}
@@ -80,7 +91,18 @@ module.exports = function(robot) {
           return;
         }
 
-        var msg = buildMessage(data);
+        var lastCommit = data[0];
+        var author = lastCommit.author.login;
+        var link = lastCommit.html_url;
+        var then = moment(lastCommit.commit.author.date).tz('America/New_York');
+
+        var fromNow = then.fromNow();
+
+        var now = moment();
+        var days = now.diff(then, 'days');
+
+        var color = getColor(days); 
+        var msg = getMessage(author, link, fromNow, days);
 
         association.rooms.forEach(function (room, j, roomList) {
           messageHipchatRoom(room, msg, color);
@@ -88,22 +110,7 @@ module.exports = function(robot) {
       });
     });
   }
-
-  function buildMessage(data) {
-    var lastCommit = data[0];
-    var author = lastCommit.author.login;
-    var link = lastCommit.html_url;
-    var then = moment(lastCommit.commit.author.date).tz('America/New_York');
-
-    var fromNow = then.fromNow();
-
-    var now = moment();
-    var days = now.diff(then, 'days');
-
-    var color = getColor(days); 
-    return getMessage(author, link, fromNow, days);
-  }
-
+  
 	function getLastProductionCommits(repo, branch, cb) {
 		request({
 		  url: 'https://api.github.com/repos/cbdr/' + repo + '/commits',
