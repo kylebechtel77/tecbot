@@ -4,10 +4,27 @@ module.exports = function(robot) {
 
 	var githubApiKey = process.env.HUBOT_GITHUB_API_KEY || '';
   var hipchatApiKey = process.env.HUBOT_HIPCHAT_API_KEY || '';
-	var productionRepo = process.env.HUBOT_PRODUCTION_REPO || '';
-	var productionBranch = process.env.HUBOT_PRODUCTION_BRANCH || '';
-  var roomNames = (process.env.HUBOT_HICPHAT_ROOM_NAMES || 'TECBotTest').split(',');
-  
+  var defaultAssociation = [ 
+    { 
+      "rooms": [ 
+        { 
+          "name": "TECBotTest", 
+          "id": "1878664" 
+        }, 
+        { 
+          "name": "Career Site Software (CMS)", 
+          "old_name": "TN_To_VPC", 
+          "id": "808078" 
+        } 
+      ], 
+      "production_repo": "CMSPencilBlue",
+      "production_branch": "production"
+    } 
+  ];
+
+  var productionAssociations = process.env.HUBOT_PRODUCTION_ASSOCIATIONS || JSON.stringify(defaultAssociation);
+  productionAssociations = JSON.parse(productionAssociations);
+
   var messages = [
   	'Good job! The last production roll was', 
   	'Let\'s get a production roll today! The last one was', 
@@ -23,6 +40,14 @@ module.exports = function(robot) {
 	waitFor945();
 
 	robot.hear(/\/production/i, function(res) {
+    var target = res.message.room.toLowerCase();
+    productionAssociations.forEach(function (association, i, associations) {
+      association.rooms.forEach(function (room, j, rooms) {
+        if (room.name.toLowerCase() == target || (room.oldName && (room.oldName.toLowerCase() == target))) {
+          sendNotificationToRoom(association.production_repo, association.production_branch, room.name);
+        }
+      });
+    });
 		sendNotification();
 	});
 
@@ -34,38 +59,57 @@ module.exports = function(robot) {
 		}, millisInDay);
 	}
 
-	function sendNotification() {
-		getLastProductionCommits(function(err, data) {
+	function sendNotificationToRoom(repo, branch, room) {
+		getLastProductionCommits(repo, branch, function(err, data) {
 			if (err || !data || !data[0]) {
 				console.log('Problem retrieving data.\n' + err + '\n' + data);
 				return;
 			}
-			var lastCommit = data[0];
-			var author = lastCommit.author.login;
-			var link = lastCommit.html_url;
-			var then = moment(lastCommit.commit.author.date).tz('America/New_York');
 
-			var fromNow = then.fromNow();
-
-			var now = moment();
-			var days = now.diff(then, 'days');
-
-			var color = getColor(days);	
-			var msg = getMessage(author, link, fromNow, days);
-
-			roomNames.forEach(function (element, index, array) {
-				messageHipchatRoom(element, msg, color);
-			});
-		})
+			var msg = buildMessage(data);
+			  
+      messageHipchatRoom(room, msg, color);
+		});
 	}
 
+  function sendNotification() {
+    productionAssociations.forEach(function (association, i, associations) {
+      getLastProductionCommits(association.production_repo, association.production_branch, function (err, data) {
+        if (err || !data || !data[0]) {
+          console.log('Problem retrieving data.\n' + err + '\n' + data);
+          return;
+        }
 
-	function getLastProductionCommits(cb) {
+        var msg = buildMessage(data);
+
+        association.rooms.forEach(function (room, j, roomList) {
+          messageHipchatRoom(room, msg, color);
+        });
+      });
+    });
+  }
+
+  function buildMessage(data) {
+    var lastCommit = data[0];
+    var author = lastCommit.author.login;
+    var link = lastCommit.html_url;
+    var then = moment(lastCommit.commit.author.date).tz('America/New_York');
+
+    var fromNow = then.fromNow();
+
+    var now = moment();
+    var days = now.diff(then, 'days');
+
+    var color = getColor(days); 
+    return getMessage(author, link, fromNow, days);
+  }
+
+	function getLastProductionCommits(repo, branch, cb) {
 		request({
-		  url: 'https://api.github.com/repos/cbdr/' + productionRepo + '/commits',
+		  url: 'https://api.github.com/repos/cbdr/' + repo + '/commits',
 		  qs: {
 		  	access_token: githubApiKey,
-		  	sha: productionBranch
+		  	sha: branch
 		  },
 		  method: 'GET',
 		  headers: {

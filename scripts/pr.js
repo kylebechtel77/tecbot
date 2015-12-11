@@ -7,9 +7,10 @@ module.exports = function(robot) {
   var hipchatApiKey = process.env.HUBOT_HIPCHAT_API_KEY || '';
 
   var defaultAssociation = [{ 
-    "rooms": [
-      "TECBotTest"
-    ], 
+    "rooms": [{
+      name: "TECBotTest",
+      id: "0000001"
+    }], 
     "repos": [  
       "tn_job" 
     ]
