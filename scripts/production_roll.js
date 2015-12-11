@@ -33,7 +33,8 @@ module.exports = function(robot) {
   ];
 
   var productionAssociations = process.env.HUBOT_HIPCHAT_PRODUCTION_ASSOCIATIONS || JSON.stringify(defaultAssociation);
-  productionAssociations = JSON.parse(productionAssociations);
+  console.log(productionAssociations);
+  productionAssociations = JSON.parse(productionAssociations.trim());
 
   var messages = [
   	'Good job! The last production roll was', 
