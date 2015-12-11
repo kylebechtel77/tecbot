@@ -54,7 +54,7 @@ module.exports = function(robot) {
     var target = res.message.room.toLowerCase();
     productionAssociations.forEach(function (association, i, associations) {
       association.rooms.forEach(function (room, j, rooms) {
-        if (room.name.toLowerCase() == target || (room.oldName && (room.oldName.toLowerCase() == target))) {
+        if (room.name.toLowerCase() == target || (room.old_name && (room.old_name.toLowerCase() == target))) {
           sendNotificationToRoom(association.production_repo, association.production_branch, room.name);
         }
       });
